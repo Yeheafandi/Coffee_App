@@ -6,6 +6,6 @@ data class CoffeeItemModel(
     val extra: String = "",
     val price: Double = 0.0,
     val rating: Double = 0.0,
-    val picUrl: String = "", // 🌟 جعلناها String مباشر لاستقبال الرابط الأول بأمان
+    val picUrl: String = "",
     val categoryId: String = ""
 )

@@ -10,20 +10,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-// 1. بنية الرسالة في نظام المحادثة
-data class ChatMessage(
-    val text: String,
-    val isUser: Boolean
-)
 
-// 2. كائن الحالة الموحد للواجهة (State Management)
-data class BaristaUiState(
-    val messages: List<ChatMessage> = listOf(
-        ChatMessage("مرحباً بك في ركن الذكاء الاصطناعي المطور ☕✨. أنا الباريستا الذكي الخاص بك. أخبرني كيف تبدو درجات الحرارة اليوم أو كيف هو مزاجك وسأقترح لك المشروب المثالي فوراً!", false)
-    ),
-    val inputText: String = "",
-    val isAiThinking: Boolean = false
-)
+
 
 class BaristaViewModel : ViewModel() {
 
@@ -47,7 +35,7 @@ class BaristaViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            delay(1500) // محاكاة معالجة الـ AI
+            delay(1500)
             val aiResponse = generateUltraBaristaResponse(userText)
 
             val finalMessages = _uiState.value.messages.toMutableList().apply {
@@ -60,21 +48,17 @@ class BaristaViewModel : ViewModel() {
         }
     }
 
-    // المحرك الهندسي المطور والمصقول كلياً لمنع تداخل الكلمات
     private fun generateUltraBaristaResponse(userInput: String): String {
         val input = userInput.lowercase()
 
-        // 1. الكشف الحاد والقطعي عن طلب مشروب ساخن صراحة (له الأولوية المطلقة)
         val explicitHotDrink = input.contains("مشروب ساخن") || input.contains("قهوة ساخن") ||
                 input.contains("قهوه ساخن") || input.contains("بدي ساخن") || input.contains("اريد ساخن") ||
                 input.contains("اعطني ساخن") || (input.contains("ساخن") && !input.contains("الجو"))
 
-        // 2. الكشف الحاد والقطعي عن طلب مشروب بارد صراحة (له الأولوية المطلقة)
         val explicitColdDrink = input.contains("مشروب بارد") || input.contains("قهوة بارد") ||
                 input.contains("قهوه بارد") || input.contains("ايس") || input.contains("iced") ||
                 input.contains("بدي بارد") || input.contains("اريد بارد") || (input.contains("بارد") && !input.contains("الجو"))
 
-        // 3. تحليل الطقس والأجواء (Weather Context Parsing) - يتم اعتماده فقط في حال غياب الطلب الصريح
         val weatherIsCold = input.contains("الجو بارد") || input.contains("الطقس بارد") ||
                 input.contains("بردان") || input.contains("الشتاء") || input.contains("منخفضة") ||
                 input.contains("منخفض") || input.contains("تحت الصفر")
@@ -87,34 +71,27 @@ class BaristaViewModel : ViewModel() {
         val hasEnergy = input.contains("طاقة") || input.contains("تعب") || input.contains("نعسان") || input.contains("دراسة") || input.contains("تركيز")
         val hasSweet = input.contains("حلو") || input.contains("شوكولاتة") || input.contains("سكر") || input.contains("كراميل") || input.contains("شوكولا")
 
-        // 5. شجرة اتخاذ القرار الذكية القائمة على الأولويات الصارمة (Decision Tree Execution)
         return when {
-            // الأولوية الأولى: المستخدم طلب مشروب ساخن صراحة، أو لم يطلب شيئاً صراحة لكن الجو بارد
             explicitHotDrink || (weatherIsCold && !explicitColdDrink) -> {
                 getHotDrinkResponse(hasEnergy, hasSweet)
             }
 
-            // الأولوية الثانية: المستخدم طلب مشروب بارد صراحة، أو لم يطلب شيئاً صراحة لكن الجو حار
             explicitColdDrink || (weatherIsHot && !explicitHotDrink) -> {
                 getColdDrinkResponse(hasEnergy, hasSweet)
             }
 
-            // الأولوية الثالثة: لم يحدد حرارة المشروب ولا الجو، ولكنه يطلب طاقة
             hasEnergy -> {
                 "التحليل يشير إلى حاجتك الفورية لجرعة طاقة وتركيز! 🧠 أنصحك بـ 'Espresso' مزدوج مركز ليقضي على الخمول، أو كوب 'Americano' أسود كلاسيكي يدوم معك طويلاً."
             }
 
-            // الأولوية الرابعة: لم يحدد حرارة المشروب ولا الجو، ولكنه يطلب تحلية
             hasSweet -> {
                 "مزاجك يطلب السكريات والدلال الفاخر! 🥰 المشروب المثالي لك الآن هو 'Hot Chocolate' الفاخر المتوفر لدينا برغوته الغنية وحليبه الساخن لإرضاء رغبتك."
             }
 
-            // الأولوية الخامسة: نصوص ترحيبية
             input.contains("مرحبا") || input.contains("السلام") || input.contains("هلا") || input.contains("هاي") -> {
                 "أهلاً بك في ركن التوصيات الذكي! 👋 أخبرني: هل درجات الحرارة مرتفعة عندك وتبحث عن انتعاش مثلج، أم منخفضة وتحتاج دفء القهوة الساخنة؟"
             }
 
-            // الحالة الافتراضية المرنة والمحايدة
             else -> {
                 val defaultOptions = listOf(
                     "خياراتنا متميزة وتناسب كل الأجواء! لتحديد طلبك بدقة، هل تفضل كوب قهوة ساخناً يعدل المزاج، أم مشروباً مثلجاً ومنعشاً؟ ☕❄️",
@@ -125,7 +102,6 @@ class BaristaViewModel : ViewModel() {
         }
     }
 
-    // دوال مساعدة منفصلة لجعل الكود نظيفاً (Clean Code Structures)
     private fun getHotDrinkResponse(hasEnergy: Boolean, hasSweet: Boolean): String {
         return when {
             hasEnergy -> "جرعة كافيين ساخنة لرفع معدلات التركيز فوراً! ☕🔥 أنصحك بكوب 'Americano' ساخن ونقي، أو 'Espresso' مزدوج دافئ يرفع الأدرينالين ويدفئ مزاجك."

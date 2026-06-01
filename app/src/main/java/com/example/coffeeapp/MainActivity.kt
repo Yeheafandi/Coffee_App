@@ -14,13 +14,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // استدعاء الثيم المحدث الخاص بـ coffeeapp ليعمل بشكل متناسق مع الألوان الجديدة
             CoffeeAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // استدعاء نظام التنقل الرئيسي
                     AppNavigation()
                 }
             }

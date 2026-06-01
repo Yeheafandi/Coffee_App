@@ -8,7 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel // استيراد دالة الـ viewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,21 +17,19 @@ import com.example.coffeeapp.navigation.TempScreen
 import com.example.coffeeapp.navigation.bottomNavItems
 import com.example.coffeeapp.ui.screens.barista.BaristaScreen
 import com.example.coffeeapp.ui.screens.home.HomeScreen
-import com.example.coffeeapp.ui.screens.home.HomeViewModel // استيراد الـ ViewModel المشترك
-import com.example.coffeeapp.ui.screens.favorites.FavoritesScreen // استيراد شاشة المفضلة الحقيقية
+import com.example.coffeeapp.ui.screens.home.HomeViewModel
+import com.example.coffeeapp.ui.screens.favorites.FavoritesScreen
 import com.example.coffeeapp.ui.screens.profile.ProfileScreen
 import com.example.coffeeapp.ui.theme.CoffeeBrownMain
 import com.example.coffeeapp.ui.theme.CoffeeCreamBG
 
 @Composable
 fun MainScreen(
-    rootNavController: NavController // متحكم التنقل الرئيسي للتطبيق ككل
+    rootNavController: NavController
 ) {
-    // محرك تنقل داخلي خاص فقط بالشاشات الأربعة السفلية
     val bottomNavController = rememberNavController()
     var selectedRoute by remember { mutableStateOf(com.example.coffeeapp.navigation.BottomNavItem.Home.route) }
 
-    // 🌟 إنشاء نسخة واحدة (Single Instance) من الـ HomeViewModel لتشاركها الشاشات السفلية والتفاصيل
     val sharedHomeViewModel: HomeViewModel = viewModel()
 
     Scaffold(
@@ -78,7 +76,6 @@ fun MainScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // 1. تبويب الشاشة الرئيسية (نمرر لها الـ ViewModel المشترك)
             composable(com.example.coffeeapp.navigation.BottomNavItem.Home.route) {
                 HomeScreen(
                     navController = rootNavController,
@@ -86,12 +83,10 @@ fun MainScreen(
                 )
             }
 
-            // 2. تبويب باريستا الـ AI
             composable(com.example.coffeeapp.navigation.BottomNavItem.AiBarista.route) {
                 BaristaScreen()
             }
 
-            // 3. 🌟 تبويب المفضلة الحقيقي مربوط الآن بالشاشة الحقيقية ونفس الـ ViewModel
             composable(com.example.coffeeapp.navigation.BottomNavItem.Favorites.route) {
                 FavoritesScreen(
                     navController = rootNavController,
@@ -99,9 +94,8 @@ fun MainScreen(
                 )
             }
 
-            // 4. تبويب الحساب الشخصي (Profile)
             composable(com.example.coffeeapp.navigation.BottomNavItem.Profile.route) {
-                ProfileScreen(navController = rootNavController) // تمرير الـ rootNavController للعودة لشاشة الـ Login
+                ProfileScreen(navController = rootNavController)
             }
         }
     }

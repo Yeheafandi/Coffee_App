@@ -25,12 +25,10 @@ import com.example.coffeeapp.ui.theme.CoffeeCreamBG
 fun LoginScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    loginViewModel: LoginViewModel = viewModel() // استدعاء تلقائي للـ ViewModel المعماري
+    loginViewModel: LoginViewModel = viewModel()
 ) {
-    // مراقبة التغيرات في الحالة البرمجية وتحويلها إلى Compose State
     val uiState by loginViewModel.uiState.collectAsState()
 
-    // الاستماع لحدث النجاح للانتقال الآمن بين الشاشات
     LaunchedEffect(uiState.isLoginSuccessful) {
         if (uiState.isLoginSuccessful) {
             navController.navigate(CoffeeScreen.Home.name) {
@@ -61,7 +59,6 @@ fun LoginScreen(
                 modifier = Modifier.padding(bottom = 36.dp)
             )
 
-            // حقل إدخال البريد الإلكتروني
             OutlinedTextField(
                 value = uiState.email,
                 onValueChange = { loginViewModel.onEmailChange(it) },
@@ -77,7 +74,6 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // حقل إدخال كلمة المرور
             OutlinedTextField(
                 value = uiState.password,
                 onValueChange = { loginViewModel.onPasswordChange(it) },
@@ -92,7 +88,6 @@ fun LoginScreen(
                 )
             )
 
-            // عرض الأخطاء ديناميكياً بأسلوب منسق
             if (uiState.errorMessage.isNotEmpty()) {
                 Text(
                     text = uiState.errorMessage,
@@ -104,7 +99,6 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // التحكم بزر الدخول بناءً على حالة التحميل من السيرفر
             if (uiState.isLoading) {
                 CircularProgressIndicator(color = CoffeeBrownMain)
             } else {

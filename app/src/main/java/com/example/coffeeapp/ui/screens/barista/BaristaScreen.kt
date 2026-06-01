@@ -37,7 +37,6 @@ fun BaristaScreen(
             .fillMaxSize()
             .background(CoffeeCreamBG)
     ) {
-        // 1. هيدر الشاشة الأنيق
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -53,7 +52,6 @@ fun BaristaScreen(
             )
         }
 
-        // 2. عرض فقاعات المحادثة عبر LazyColumn (Lab 7)
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
@@ -65,7 +63,6 @@ fun BaristaScreen(
                 ChatBubble(message = message)
             }
 
-            // مؤشر حالة التفكير للباريستا الـ AI
             if (uiState.isAiThinking) {
                 item {
                     Row(
@@ -84,7 +81,6 @@ fun BaristaScreen(
             }
         }
 
-        // 3. شريط إدخال النص السفلي
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -122,7 +118,6 @@ fun BaristaScreen(
     }
 }
 
-// عنصر فقاعة الرسالة المخصص والمميز بصرياً لمريحة العين (User-friendly)
 @Composable
 fun ChatBubble(message: ChatMessage) {
     val alignment = if (message.isUser) Alignment.CenterEnd else Alignment.CenterStart

@@ -27,7 +27,7 @@ import java.net.URLEncoder
 @Composable
 fun FavoritesScreen(
     navController: NavController,
-    homeViewModel: HomeViewModel // مشاركة نفس الـ ViewModel لقراءة البيانات المحدثة
+    homeViewModel: HomeViewModel
 ) {
     val uiState by homeViewModel.uiState.collectAsState()
 
@@ -41,7 +41,6 @@ fun FavoritesScreen(
         containerColor = CoffeeCreamBG
     ) { innerPadding ->
         if (uiState.favoriteItems.isEmpty()) {
-            // واجهة تظهر في حال كانت المفضلة فارغة
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -55,7 +54,6 @@ fun FavoritesScreen(
                 )
             }
         } else {
-            // عرض العناصر المفضلة باستخدام الكروت المجهزة هندسياً
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -67,7 +65,6 @@ fun FavoritesScreen(
                     CoffeePopularCard(
                         coffeeItem = coffeeItem,
                         onClick = {
-                            // تفعيل إمكانية الضغط والدخول للتفاصيل من شاشة المفضلة أيضاً!
                             val encodedUrl = URLEncoder.encode(coffeeItem.picUrl, "UTF-8")
                             navController.navigate(
                                 "${CoffeeScreen.Detail.name}/${coffeeItem.title}/${coffeeItem.description}/${coffeeItem.price.toFloat()}/${coffeeItem.rating.toFloat()}/${coffeeItem.extra}/$encodedUrl"

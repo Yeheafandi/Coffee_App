@@ -22,25 +22,22 @@ import kotlinx.coroutines.delay
 @Composable
 fun SplashScreen(navController: NavController, modifier: Modifier = Modifier) {
 
-    // دالة الانتقال التلقائي بعد ثانيتين تبعاً لمفهوم إدارة الأحداث الجانبية
     LaunchedEffect(key1 = true) {
         delay(2000)
-        // الانتقال لشاشة الدخول وحذف شاشة الـ Splash من مكدس التنقل لكي لا يعود إليها المستخدم عند الضغط على زر الرجوع
         navController.navigate(CoffeeScreen.Login.name) {
             popUpTo(CoffeeScreen.Splash.name) { inclusive = true }
         }
     }
 
-    // تصميم الواجهة بالاعتماد على المعدلات الحجمية والوزنية المأخوذة في المختبرات 2 و 3
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(CoffeeCreamBG), // الخلفية الكريمية للمتجر
+            .background(CoffeeCreamBG),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center // 🌟 تم الإصلاح هنا لتأخذ Arrangement بدلاً من Alignment
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = "☕",
@@ -48,7 +45,6 @@ fun SplashScreen(navController: NavController, modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // استدعاء النص من strings.xml لمنع النصوص المباشرة (Hardcoded) نهائياً تماشياً مع معايير المختبر 3
             Text(
                 text = stringResource(id = R.string.splash_welcome),
                 color = CoffeeBrownMain,

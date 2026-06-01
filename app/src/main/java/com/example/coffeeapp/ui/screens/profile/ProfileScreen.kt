@@ -39,7 +39,6 @@ fun ProfileScreen(
     val userName = currentUser?.displayName ?: "مطور القهوة الفاخرة"
     val userEmail = currentUser?.email ?: "developer@coffeeapp.com"
 
-    // 🌟 متغير الحالة للتحكم في ظهور نافذة تأكيد تسجيل الخروج
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -60,7 +59,6 @@ fun ProfileScreen(
         ) {
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 1. كارت الصورة الشخصية والاسم
             Box(
                 modifier = Modifier
                     .size(100.dp)
@@ -83,7 +81,6 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // 2. قائمة الخيارات والإعدادات الذكية
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -99,12 +96,10 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 3. زر تسجيل الخروج الفاخر (Sign Out)
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        // 🌟 فتح النافذة الحوارية عند الضغط بدلاً من تسجيل الخروج المباشر
                         showLogoutDialog = true
                     },
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -133,7 +128,6 @@ fun ProfileScreen(
         }
     }
 
-    // 🌟 4. منطق بناء الـ AlertDialog لتأكيد الخروج
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false }, // إغلاق النافذة عند الضغط خارجها
@@ -155,20 +149,20 @@ fun ProfileScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        showLogoutDialog = false // إغلاق النافذة أولاً
-                        FirebaseAuth.getInstance().signOut() // تسجيل الخروج من Firebase
+                        showLogoutDialog = false
+                        FirebaseAuth.getInstance().signOut()
                         navController.navigate(CoffeeScreen.Login.name) {
-                            popUpTo(0) { inclusive = true } // مسح المكدس والعودة لـ Login
+                            popUpTo(0) { inclusive = true }
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red) // لون أحمر للتنبيه بالخروج
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                 ) {
                     Text(text = stringResource(R.string.logout_yes), color = Color.White, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(
-                    onClick = { showLogoutDialog = false } // إغلاق النافذة والبقاء في الحساب
+                    onClick = { showLogoutDialog = false }
                 ) {
                     Text(text = stringResource(R.string.cancel_button), color = Color.Gray, fontWeight = FontWeight.Medium)
                 }

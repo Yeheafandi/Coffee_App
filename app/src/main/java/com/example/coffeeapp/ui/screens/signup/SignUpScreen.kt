@@ -1,6 +1,5 @@
 package com.example.coffeeapp.ui.screens.signup
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,8 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.coffeeapp.R
 import com.example.coffeeapp.navigation.CoffeeScreen
-import com.example.coffeeapp.ui.theme.CoffeeBrownMain
-import com.example.coffeeapp.ui.theme.CoffeeCreamBG
+import com.example.coffeeapp.ui.theme.* // استيراد كافة الألوان الموحدة من حزمة الثيم تلقائياً
 
 @Composable
 fun SignUpScreen(
@@ -31,7 +29,6 @@ fun SignUpScreen(
 ) {
     val uiState by signUpViewModel.uiState.collectAsState()
 
-    // الاستماع لحدث النجاح للتنقل التلقائي إلى الشاشة الرئيسية (Home Screen)
     LaunchedEffect(uiState.isSignUpSuccessful) {
         if (uiState.isSignUpSuccessful) {
             navController.navigate(CoffeeScreen.Home.name) {
@@ -44,8 +41,8 @@ fun SignUpScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(CoffeeCreamBG)
-            .verticalScroll(rememberScrollState()), // دعم الشاشات الصغيرة منعاً لاختفاء العناصر
+            .background(CoffeeCreamBG) // اللون الكريمي المركزي المجلوب من ملف الألوان
+            .verticalScroll(rememberScrollState()),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -100,13 +97,13 @@ fun SignUpScreen(
                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = CoffeeBrownMain, focusedLabelColor = CoffeeBrownMain)
             )
 
-            // 🌟 عرض مؤشر ومقياس قوة كلمة المرور ديناميكياً (Unique Feature)
+            // عرض مؤشر ومقياس قوة كلمة المرور ديناميكياً بالألوان الموحدة الجديدة
             if (uiState.password.isNotEmpty()) {
                 val (labelText, indicatorColor) = when (uiState.passwordStrength) {
                     PasswordStrength.EMPTY -> "" to Color.Transparent
-                    PasswordStrength.WEAK -> stringResource(R.string.password_weak) to Color.Red
-                    PasswordStrength.MEDIUM -> stringResource(R.string.password_medium) to Color(0xFFFFA500)
-                    PasswordStrength.STRONG -> stringResource(R.string.password_strong) to Color(0xFF2E7D32)
+                    PasswordStrength.WEAK -> stringResource(R.string.password_weak) to PasswordWeakColor
+                    PasswordStrength.MEDIUM -> stringResource(R.string.password_medium) to PasswordMediumColor
+                    PasswordStrength.STRONG -> stringResource(R.string.password_strong) to PasswordStrongColor
                 }
 
                 Column(modifier = Modifier.fillMaxWidth().padding(top = 6.dp)) {
@@ -123,7 +120,7 @@ fun SignUpScreen(
                         },
                         modifier = Modifier.fillMaxWidth().height(6.dp),
                         color = indicatorColor,
-                        trackColor = Color.LightGray,
+                        trackColor = IndicatorTrackColor, // استخدام لون الخلفية الموحد للشريط
                     )
                 }
             }
@@ -142,7 +139,7 @@ fun SignUpScreen(
                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = CoffeeBrownMain, focusedLabelColor = CoffeeBrownMain)
             )
 
-            // رسائل الخطأ العامة
+            // الاستخدام الموحد والنظيف لعرض رسائل الأخطاء القادمة مباشرة كنص من الـ ViewModel
             if (uiState.errorMessage.isNotEmpty()) {
                 Text(
                     text = uiState.errorMessage,

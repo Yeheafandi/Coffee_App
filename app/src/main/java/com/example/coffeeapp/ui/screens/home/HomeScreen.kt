@@ -51,7 +51,6 @@ fun HomeScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                // 1. قسم الترحيب
                 item {
                     Column(modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {
                         Text(text = stringResource(R.string.welcome_message), fontSize = 16.sp, color = Color.Gray)
@@ -59,7 +58,6 @@ fun HomeScreen(
                     }
                 }
 
-                // 2. البانر
                 if (uiState.banners.isNotEmpty()) {
                     item {
                         AsyncImage(
@@ -71,7 +69,6 @@ fun HomeScreen(
                     }
                 }
 
-                // 3. الفئات
                 item {
                     Text(text = stringResource(R.string.categories), fontSize = 18.sp, fontWeight = FontWeight.Bold, color = CoffeeBrownMain)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -95,7 +92,6 @@ fun HomeScreen(
                     }
                 }
 
-                // 4. المشروبات المصفاة
                 item { Text(text = stringResource(R.string.available_drinks), fontSize = 18.sp, fontWeight = FontWeight.Bold, color = CoffeeBrownMain) }
 
                 if (filteredItems.isEmpty()) {
@@ -110,7 +106,6 @@ fun HomeScreen(
                     }
                 }
 
-                // 5. الأكثر شعبية
                 item { Text(text = stringResource(R.string.popular_items), fontSize = 18.sp, fontWeight = FontWeight.Bold, color = CoffeeBrownMain) }
                 items(uiState.popularItems) { coffeeItem ->
                     CoffeePopularCard(coffeeItem = coffeeItem, onClick = { navigateToDetail(navController, coffeeItem) })
@@ -120,7 +115,6 @@ fun HomeScreen(
     }
 }
 
-// دالة مساعدة لتجنب تكرار كود التنقل
 fun navigateToDetail(navController: NavController, coffeeItem: CoffeeItemModel) {
     val encodedUrl = java.net.URLEncoder.encode(coffeeItem.picUrl, "UTF-8")
     navController.navigate("${CoffeeScreen.Detail.name}/${coffeeItem.title}/${coffeeItem.description}/${coffeeItem.price.toFloat()}/${coffeeItem.rating.toFloat()}/${coffeeItem.extra}/$encodedUrl")

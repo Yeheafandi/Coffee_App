@@ -1,43 +1,38 @@
 package com.example.coffeeapp.ui.screens.signup
 
-
+import android.app.Application
 import android.util.Patterns
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import com.example.coffeeapp.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-// 1. تجميع حالة واجهة إنشاء الحساب في كائن موحد (UI State) تماشياً مع Lab 6
-data class SignUpUiState(
-    val name: String = "",
-    val email: String = "",
-    val password: String = "",
-    val confirmPassword: String = "",
-    val errorMessage: String = "",
-    val isLoading: Boolean = false,
-    val isSignUpSuccessful: Boolean = false,
-    val passwordStrength: PasswordStrength = PasswordStrength.EMPTY
-)
 
-// دالة مخصصة لتقييم قوة كلمة المرور (Unique Feature)
-enum class PasswordStrength {
-    EMPTY, WEAK, MEDIUM, STRONG
-}
 
-class SignUpViewModel : ViewModel() {
+
+
+class SignUpViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    fun onNameChange(newName: String) { _uiState.update { it.copy(name = newName, errorMessage = "") } }
-    fun onEmailChange(newEmail: String) { _uiState.update { it.copy(email = newEmail, errorMessage = "") } }
-    fun onConfirmPasswordChange(newConfirm: String) { _uiState.update { it.copy(confirmPassword = newConfirm, errorMessage = "") } }
+    private fun getString(resId: Int): String = getApplication<Application>().getString(resId)
 
-    // فحص قوة كلمة المرور ديناميكياً عند كل حرف يكتبه المستخدم (Reactive State)
+    fun onNameChange(newName: String) {
+        _uiState.update { it.copy(name = newName, errorMessage = "") }
+    }
+    fun onEmailChange(newEmail: String) {
+        _uiState.update { it.copy(email = newEmail, errorMessage = "") }
+    }
+    fun onConfirmPasswordChange(newConfirm: String) {
+        _uiState.update { it.copy(confirmPassword = newConfirm, errorMessage = "") }
+    }
+
     fun onPasswordChange(newPassword: String) {
         val strength = calculatePasswordStrength(newPassword)
         _uiState.update { it.copy(password = newPassword, passwordStrength = strength, errorMessage = "") }
@@ -47,7 +42,6 @@ class SignUpViewModel : ViewModel() {
         if (password.isEmpty()) return PasswordStrength.EMPTY
         if (password.length < 6) return PasswordStrength.WEAK
 
-        // استخدام الـ Regex المتقدم للفحص الاحترافي
         val hasLetters = password.any { it.isLetter() }
         val hasDigits = password.any { it.isDigit() }
         val hasSpecial = password.any { !it.isLetterOrDigit() }
@@ -65,37 +59,36 @@ class SignUpViewModel : ViewModel() {
         val password = state.password
         val confirmPassword = state.confirmPassword
 
-        // منطق التحقق الصارم من المدخلات والمطابقة (Validation Logic)
         when {
             state.name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() -> {
-                _uiState.update { it.copy(errorMessage = "عذراً، لا يمكن ترك الحقول فارغة!") }
+                _uiState.update { it.copy(errorMessage = getString(R.string.error_empty_fields)) }
                 return
             }
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                _uiState.update { it.copy(errorMessage = "صيغة البريد الإلكتروني غير صحيحة!") }
+                _uiState.update { it.copy(errorMessage = getString(R.string.error_invalid_email)) }
                 return
             }
             password != confirmPassword -> {
-                _uiState.update { it.copy(errorMessage = "كلمتا المرور غير متطابقتين!") }
+                _uiState.update { it.copy(errorMessage = getString(R.string.error_password_mismatch)) }
                 return
             }
             state.passwordStrength == PasswordStrength.WEAK -> {
-                _uiState.update { it.copy(errorMessage = "يرجى اختيار كلمة مرور أقوى لحماية حسابك.") }
+                _uiState.update { it.copy(errorMessage = getString(R.string.error_weak_password)) }
                 return
             }
         }
 
-        // إرسال البيانات إلى Firebase Authentication
         _uiState.update { it.copy(isLoading = true) }
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _uiState.update { it.copy(isLoading = false, isSignUpSuccessful = true) }
                 } else {
+                    val serverError = task.exception?.localizedMessage ?: getString(R.string.error_unexpected)
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = "فشل إنشاء الحساب: ${task.exception?.localizedMessage}"
+                            errorMessage = serverError
                         )
                     }
                 }

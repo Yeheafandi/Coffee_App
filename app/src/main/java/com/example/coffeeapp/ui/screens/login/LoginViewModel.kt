@@ -3,22 +3,14 @@ package com.example.coffeeapp.ui.screens.login
 import android.app.Application
 import android.util.Patterns
 import androidx.lifecycle.AndroidViewModel
-import com.example.coffeeapp.R // تأكد من أن هذا المسار يطابق حزمة مشروعك
+import com.example.coffeeapp.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-data class LoginUiState(
-    val email: String = "",
-    val password: String = "",
-    val errorMessage: String = "",
-    val isLoading: Boolean = false,
-    val isLoginSuccessful: Boolean = false
-)
 
-// نستخدم AndroidViewModel للوصول إلى Context وجلب النصوص
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -26,7 +18,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    // دالة مساعدة بسيطة لجلب النصوص من strings.xml
     private fun getString(resId: Int): String = getApplication<Application>().getString(resId)
 
     fun onEmailChange(newEmail: String) {
@@ -63,7 +54,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 if (task.isSuccessful) {
                     _uiState.update { it.copy(isLoading = false, isLoginSuccessful = true) }
                 } else {
-                    // استخدام النصوص المحددة في ملف strings.xml
                     val friendlyMessage = getString(R.string.error_login_failed)
                     _uiState.update { it.copy(isLoading = false, errorMessage = friendlyMessage) }
                 }

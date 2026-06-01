@@ -60,13 +60,10 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // مكتبة التنقل بين الشاشات (تبعا لـ Lab 8 / Navigation)
     implementation("androidx.navigation:navigation-compose:2.8.5")
 
-    // مكتبة تحميل الصور من الإنترنت وعرضها في القوائم (تبعا لـ Lab 7 / LazyColumn)
     implementation("io.coil-kt:coil-compose:2.6.0")
 
-    // مكتبة الذكاء الاصطناعي لتوليد ميزتنا الخاصة (Gemini API)
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
     implementation("com.google.firebase:firebase-auth-ktx:23.1.0")

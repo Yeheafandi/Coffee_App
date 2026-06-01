@@ -4,7 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Face // 🌟 هذه هي الأيقونة المستخدمة للباريستا وتعمل بامتياز
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.coffeeapp.R
 
@@ -19,7 +19,6 @@ sealed class BottomNavItem(
     object Profile : BottomNavItem("profile_tab", R.string.nav_profile, Icons.Default.Person)
 }
 
-// قائمة العناصر التي ستعرض في الشريط السفلي
 val bottomNavItems = listOf(
     BottomNavItem.Home,
     BottomNavItem.AiBarista,
