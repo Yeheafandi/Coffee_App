@@ -121,7 +121,7 @@ fun BaristaScreen(
 @Composable
 fun ChatBubble(message: ChatMessage) {
     val alignment = if (message.isUser) Alignment.CenterEnd else Alignment.CenterStart
-    val bubbleColor = if (message.isUser) CoffeeBrownMain else Color(0xFFE8E0D5)
+    val bubbleColor = if (message.isUser) CoffeeBrownMain else CoffeeCreamBG
     val textColor = if (message.isUser) Color.White else Color.Black
     val shape = if (message.isUser) {
         RoundedCornerShape(16.dp, 16.dp, 0.dp, 16.dp)
